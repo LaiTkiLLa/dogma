@@ -35,6 +35,13 @@ class Settings(BaseSettings):
     app_log_level: str = "INFO"
     chat_max_tool_iterations: int = 3
 
+    # Через запятую; пусто — CORS middleware не включается
+    cors_origins: str = ""
+
+    @property
+    def cors_origin_list(self) -> list[str]:
+        return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+
 
 @lru_cache
 def get_settings() -> Settings:
