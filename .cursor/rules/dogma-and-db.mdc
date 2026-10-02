@@ -1,0 +1,26 @@
+---
+description: Правила синхронизации DOGMA, status_code и PostgreSQL repository
+globs: app/parser/**/*.py,app/worker/**/*.py,app/apartments/**/*.py,app/db/**/*.py
+alwaysApply: false
+---
+
+# DOGMA и база данных
+
+## DOGMA
+
+- Используй HTTP JSON API (`service.dogma.ru`), не HTML и не browser automation.
+- Храни `status_code` ровно как пришёл; не выводи бизнес-смысл из кодов статуса.
+- `statuses=[2]` — только фильтр синхронизации.
+- Sync должен быть идемпотентным через upsert по `source_id`.
+- Один `sync_started_at` на run → записывать во все `last_seen_at`.
+- Никогда не деактивируй квартиры после частичного или failed sync.
+- `is_active` означает присутствие в текущем синхронизируемом каталоге DOGMA.
+
+## База данных
+
+- SQL только в Repository (SQLAlchemy 2.x).
+- Изменения схемы — через Alembic.
+- `source_id` — уникальный ключ квартиры DOGMA.
+- Не удаляй квартиры физически при sync.
+- Для поведения repository предпочитай integration-тесты с PostgreSQL.
+- Unit-тесты не должны вызывать DOGMA; клиент мокай.

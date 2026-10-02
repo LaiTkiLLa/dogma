@@ -1,0 +1,14 @@
+---
+description: Правила AI-агента, tool calling и ответа /chat
+globs: app/agent/**/*.py,app/tools/**/*.py,app/llm/**/*.py,app/api/**/*.py
+alwaysApply: false
+---
+
+# AI и Chat
+
+- LLM никогда не обращается к PostgreSQL напрямую.
+- LLM никогда не придумывает данные о квартирах.
+- Реальные данные о квартирах берутся только из `search_apartments`.
+- Структурированный массив `apartments` в `/chat` формирует backend из результата tool — никогда не парсить из текста LLM.
+- DeepSeek держи за `LLMProvider`; Agent зависит только от абстракции.
+- В unit-тестах LLM мокай; DeepSeek из unit-тестов не вызывай.

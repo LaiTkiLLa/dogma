@@ -1,0 +1,30 @@
+---
+description: Границы архитектуры и направление зависимостей сервиса поиска квартир DOGMA
+alwaysApply: true
+---
+
+# Архитектура
+
+Источник истины: `ARCHITECTURE.md`. Не добавляй технологии и слои, которые там не требуются.
+
+## Направление зависимостей
+
+```text
+Agent → Tool → SearchService → Repository → PostgreSQL
+Worker → DogmaClient → Parser/Normalizer → Repository
+```
+
+## Запрещено
+
+- Agent → Repository / SQL / DogmaClient
+- Tool → DeepSeek HTTP / SQLAlchemy
+- SearchService → Agent / DeepSeek / DOGMA
+- Parser/Worker → Agent / FastAPI / DeepSeek
+
+## Объём MVP
+
+- Один tool: `search_apartments`
+- Без Celery, Redis, Kafka, Kubernetes, browser automation и HTML-парсинга
+- Предпочитай простой явный код; без абстракций «на будущее»
+
+Если реализация требует изменить архитектуру: остановись и объясни зачем, что меняется и какие более простые альтернативы есть. Не меняй `ARCHITECTURE.md` молча.
